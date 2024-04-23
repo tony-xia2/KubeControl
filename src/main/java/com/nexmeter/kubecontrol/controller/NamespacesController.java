@@ -19,6 +19,7 @@ import java.util.Set;
 public class NamespacesController {
     private final NamespacesService namespacesService;
 
+
     @GetMapping
     public ResponseEntity<Set<String>> getNamespaces() {
         try {
