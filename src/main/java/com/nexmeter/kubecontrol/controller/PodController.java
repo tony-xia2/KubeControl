@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/pods")
 @RequiredArgsConstructor
-public class V1PodController {
+public class PodController {
 
 
 

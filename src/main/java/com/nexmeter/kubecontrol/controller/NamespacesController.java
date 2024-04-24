@@ -1,12 +1,14 @@
 package com.nexmeter.kubecontrol.controller;
 
-import com.nexmeter.kubecontrol.service.NamespacesService;
+import com.nexmeter.kubecontrol.service.V1NamespaceService;
+import io.kubernetes.client.openapi.models.V1Namespace;
+import io.kubernetes.client.openapi.models.V1Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Tony
@@ -17,39 +19,31 @@ import java.util.Set;
 @RequestMapping("/namespaces")
 @RequiredArgsConstructor
 public class NamespacesController {
-    private final NamespacesService namespacesService;
+    private final V1NamespaceService v1NamespaceService;
 
+    @GetMapping("/{name}")
+    public ResponseEntity<V1Namespace> getNamespace(@PathVariable String name) {
+        return ResponseEntity.ok(v1NamespaceService.getNamespace(name));
+    }
+
+    @GetMapping("/{name}/exist")
+    public ResponseEntity<Boolean> existNamespace(@PathVariable String name) {
+        return ResponseEntity.ok(v1NamespaceService.existNamespace(name));
+    }
 
     @GetMapping
-    public ResponseEntity<Set<String>> getNamespaces() {
-        try {
-            return ResponseEntity.ok(namespacesService.getNamespaces());
-        } catch (Exception e) {
-            log.error("get namespaces error", e);
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<List<V1Namespace>> getNamespaces() {
+        return ResponseEntity.ok(v1NamespaceService.getNamespaces());
     }
 
     @PostMapping
-    public ResponseEntity<Void> createNamespaces(String namespace) {
-        try {
-            namespacesService.createNamespaces(namespace);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            log.error("create namespaces error", e);
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<V1Namespace> createNamespaces(String namespace) {
+        return ResponseEntity.ok(v1NamespaceService.createNamespaces(namespace));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteNamespaces(String namespace) {
-        try {
-            namespacesService.deleteNamespaces(namespace);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            log.error("delete namespaces error", e);
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<V1Status> deleteNamespaces(String namespace) {
+        return ResponseEntity.ok(v1NamespaceService.deleteNamespaces(namespace));
     }
 
 }
